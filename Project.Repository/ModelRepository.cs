@@ -3,46 +3,28 @@ using Project.DAL;
 using Project.DAL.Entities;
 using Project.Repository.Common;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Project.Repository
 {
     public class ModelRepository : RepositoryBase<IModelEntity>, IModelRepository
     {
-        private readonly IUnitOfWork _unitOfWork;
-
-        public ModelRepository(IVehicleContext context, IUnitOfWork unitOfWork)
+        public ModelRepository(IVehicleContext context)
             : base(context)
         {
-            _unitOfWork = unitOfWork;
         }
 
-        public async Task AddAsync(IModelEntity vehicleModel)
+        //This method gets and lists all vehicle models of a make with the same id from the database
+        public async Task<IEnumerable<IModelEntity>> GetAllByMakeIdAsync(int id)
         {
-            Add(vehicleModel);
-            await _unitOfWork.Complete();
+            return await _context.Models.Where(m => m.MakeId == id).ToListAsync();
         }
 
-        public async Task<IList<IModelEntity>> GetAllByMakeIdAsync(int id)
-        {
-            return await FindById(m => m.MakeId.Equals(id)).ToListAsync();
-        }
-
+        //This method gets a particlar make model and is found by its Id
         public async Task<IModelEntity> GetByIdAsync(int id)
         {
-            return await FindById(m => m.Id.Equals(id)).FirstOrDefaultAsync();
-        }
-
-        public async Task RemoveAsync(IModelEntity vehicleModel)
-        {
-            Remove(vehicleModel);
-            await _unitOfWork.Complete();
-        }
-
-        public async Task UpdateAsync(IModelEntity vehicleModel)
-        {
-            Update(vehicleModel);
-            await _unitOfWork.Complete();
+            return await _context.Models.Where(m => m.Id == id).FirstOrDefaultAsync();
         }
     }
 }

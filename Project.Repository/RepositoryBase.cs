@@ -2,8 +2,10 @@
 using Project.DAL;
 using Project.Repository.Common;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Project.Repository
 {
@@ -16,9 +18,9 @@ namespace Project.Repository
             _context = context;
         }
 
-        public void Add(T entity)
+        public async Task Add(T entity)
         {
-            _context.Set<T>().Add(entity);
+            await _context.Set<T>().AddAsync(entity);
         }
 
         public void Remove(T entity)
@@ -26,10 +28,15 @@ namespace Project.Repository
             _context.Set<T>().Remove(entity);
         }
 
-        public IQueryable<T> FindById(Expression<Func<T, bool>> expression)
+        public async Task<IEnumerable<T>> FindAll()
         {
-            return _context.Set<T>()
-            .Where(expression).AsNoTracking();
+            return await _context.Set<T>().AsNoTracking().ToListAsync();
+        }
+
+        public async Task<IEnumerable<T>> FindById(Expression<Func<T, bool>> expression)
+        {
+            return await _context.Set<T>()
+            .Where(expression).AsNoTracking().ToListAsync();
         }
 
         public void Update(T entity)

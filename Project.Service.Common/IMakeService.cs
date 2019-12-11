@@ -11,7 +11,7 @@ namespace Project.Service.Common
         Task AddAsync(IMake vehicleMake);
         Task UpdateAsync(IMake vehicleMake);
         Task RemoveAsync(IMake vehicleMake);
-        Task<IList<IMake>> GetAllAsync();
+        Task<IEnumerable<IMake>> GetAllAsync();
         Task<IMake> GetByIdAsync(int id);
         //Task<IList<IMake>> ToPagedList(IPageModel pageModel);
     }

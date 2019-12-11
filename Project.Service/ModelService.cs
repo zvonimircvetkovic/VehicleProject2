@@ -10,34 +10,35 @@ namespace Project.Service
 {
     public class ModelService : IModelService
     {
-        private readonly IModelRepository _modelRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public ModelService(IModelRepository makeRepository, IMapper mapper)
+        public ModelService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _modelRepository = makeRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         //Adds a model
         public async Task AddAsync(IModel vehicleModel)
         {
-            var newModel = _mapper.Map<IModelEntity>(vehicleModel);
-            await _modelRepository.AddAsync(newModel);
+            var newModel = _mapper.Map<ModelEntity>(vehicleModel);
+            await _unitOfWork.Models.Add(newModel);
+            await _unitOfWork.Complete();
         }
 
         //Gets all models my their make id
-        public async Task<IList<IModel>> GetAllByMakeIdAsync(int id)
+        public async Task<IEnumerable<IModel>> GetAllByMakeIdAsync(int id)
         {
-            var models = await _modelRepository.GetAllByMakeIdAsync(id);
-            var listModels = _mapper.Map<List<IModel>>(models);
+            var models = await _unitOfWork.Models.GetAllByMakeIdAsync(id);
+            var listModels = _mapper.Map<IEnumerable<IModel>>(models);
             return listModels;
         }
 
         //Gets a model by its id
         public async Task<IModel> GetByIdAsync(int id)
         {
-            var models = await _modelRepository.GetByIdAsync(id);
+            var models = await _unitOfWork.Models.GetByIdAsync(id);
             var listModel = _mapper.Map<IModel>(models);
             return listModel;
         }
@@ -45,15 +46,17 @@ namespace Project.Service
         //Removes a model
         public async Task RemoveAsync(IModel vehicleModel)
         {
-            var deleteModel = _mapper.Map<IModelEntity>(vehicleModel);
-            await _modelRepository.RemoveAsync(deleteModel);
+            var deleteModel = _mapper.Map<ModelEntity>(vehicleModel);
+            _unitOfWork.Models.Remove(deleteModel);
+            await _unitOfWork.Complete();
         }
 
         //Updates a model
         public async Task UpdateAsync(IModel vehicleModel)
         {
-            var editModel = _mapper.Map<IModelEntity>(vehicleModel);
-            await _modelRepository.UpdateAsync(editModel);
+            var editModel = _mapper.Map<ModelEntity>(vehicleModel);
+            _unitOfWork.Models.Update(editModel);
+            await _unitOfWork.Complete();
         }
     }
 }

@@ -1,0 +1,24 @@
+<h2>Makes List</h2>
+
+<table class="table table-condensed">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Abrv</th>
+    </tr>
+  </thead>
+  <tbody *ngFor="let make of makes">
+    <tr>
+      <td>{{make.name}}</td>
+      <td>{{make.abrv}}</td>
+      <td><a [routerLink]="['/makes', make.id, 'models']">Models</a></td>
+      <td><a [routerLink]="['/makes', make.id, 'edit']">Edit</a></td>
+      <td><a [routerLink]="['/makes', make.id, 'delete']">Delete</a></td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td><a [routerLink]="['/makes/create']">Create</a></td>
+    </tr>
+  </tfoot>
+</table>

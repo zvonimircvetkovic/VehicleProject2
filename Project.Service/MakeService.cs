@@ -10,48 +10,51 @@ namespace Project.Service
 {
     public class MakeService : IMakeService
     {
-        private readonly IMakeRepository _makeRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public MakeService(IMakeRepository makeRepository, IMapper mapper)
+        public MakeService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _makeRepository = makeRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         //Adds a make
         public async Task AddAsync(IMake vehicleMake)
         {
-            var newMake = _mapper.Map<IMakeEntity>(vehicleMake);
-            await _makeRepository.AddAsync(newMake);
+            var newMake = _mapper.Map<MakeEntity>(vehicleMake);
+            await _unitOfWork.Makes.Add(newMake);
+            await _unitOfWork.Complete();
         }
 
         //Updates a make
         public async Task UpdateAsync(IMake vehicleMake)
         {
-            var editMake = _mapper.Map<IMakeEntity>(vehicleMake);
-            await _makeRepository.UpdateAsync(editMake);
+            var editMake = _mapper.Map<MakeEntity>(vehicleMake);
+            _unitOfWork.Makes.Update(editMake);
+            await _unitOfWork.Complete();
         }
 
         //Removes a make
         public async Task RemoveAsync(IMake vehicleMake)
         {
-            var deleteMake = _mapper.Map<IMakeEntity>(vehicleMake);
-            await _makeRepository.RemoveAsync(deleteMake);
+            var deleteMake = _mapper.Map<MakeEntity>(vehicleMake);
+            _unitOfWork.Makes.Remove(deleteMake);
+            await _unitOfWork.Complete();
         }
 
         //Gets all makes from the repository
-        public async Task<IList<IMake>> GetAllAsync()
+        public async Task<IEnumerable<IMake>> GetAllAsync()
         {
-            var makes = await _makeRepository.GetAllAsync();
-            var listMakes = _mapper.Map<List<IMake>>(makes);
+            var makes = await _unitOfWork.Makes.GetAllAsync();
+            var listMakes = _mapper.Map<IEnumerable<IMake>>(makes);
             return listMakes;
         }
 
         //Gets the make from the repository by its id
         public async Task<IMake> GetByIdAsync(int id)
         {
-            var make = await _makeRepository.GetByIdAsync(id);
+            var make = await _unitOfWork.Makes.GetByIdAsync(id);
             var listMake = _mapper.Map<IMake>(make);
             return listMake;
         }

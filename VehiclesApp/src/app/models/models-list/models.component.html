@@ -1,0 +1,23 @@
+<h2>Model List</h2>
+
+<table class="table table-condensed">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Abrv</th>
+    </tr>
+  </thead>
+  <tbody *ngFor="let model of models">
+    <tr>
+      <td>{{model.name}}</td>
+      <td>{{model.abrv}}</td>
+      <td><a [routerLink]="['/makes', model.makeId, 'models', model.id, 'edit']">Edit</a></td>
+      <td><a [routerLink]="['/makes', model.makeId, 'models', model.id, 'delete']">Delete</a></td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td><a [routerLink]="['/makes', makeId, 'models', 'create']">Create</a></td>
+    </tr>
+  </tfoot>
+</table>

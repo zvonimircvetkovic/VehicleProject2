@@ -1,0 +1,23 @@
+
+
+
+<form #editForm="ngForm" (ngSubmit)="updateMake()">
+    <input type="hidden" name="id" class="form-control" [(ngModel)]="make && make.id">
+  <div class="form-group">
+    <label for="name">Name</label>
+    <div class="col-md-2">
+      <input type="text" name="name" class="form-control" [(ngModel)]="make && make.name">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="abrv">Abbreviation</label>
+    <div class="col-md-2">
+      <input type="text" name="abrv" class="form-control" [(ngModel)]="make && make.abrv">
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-md-offset-2 col-md-10">
+        <input type="submit" value="Edit" class="btn btn-success" />
+    </div>
+  </div>
+</form>

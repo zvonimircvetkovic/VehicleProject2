@@ -2,70 +2,71 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Project.Common.Models;
 using Project.Model.Common;
 using Project.Service.Common;
 
 namespace Project.WebAPI.Controllers
 {
-    public class ModelsController : Controller
+    [Route("api/makes/{makeId}/models")]
+    [ApiController]
+    public class ModelsController : ControllerBase
     {
         private readonly IModelService _modelService;
+        private readonly IMapper _mapper;
 
-        public ModelsController(IModelService modelService)
+        public ModelsController(IModelService modelService, IMapper mapper)
         {
             _modelService = modelService;
+            _mapper = mapper;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index(int makeId)
         {
             var models = await _modelService.GetAllByMakeIdAsync(makeId);
 
-            return View(models);
+            return Ok(models);
+        }
+        
+        [HttpGet("{id}", Name = "GetModel")]
+        public async Task<IActionResult> GetModel(int id)
+        {
+            var model = await _modelService.GetByIdAsync(id);
+
+            return Ok(model);
         }
 
-        public IActionResult Create(int makeId)
+        [HttpPost]
+        public async Task<IActionResult> CreateConfirmed(ViewModel model)
         {
-            var newModel = new Model.Model
-            {
-                MakeId = makeId
-            };
+            var newModel = _mapper.Map<IModel>(model);
 
-            return View(newModel);
-        }
-
-        public async Task<IActionResult> Create(IModel newModel)
-        {
             await _modelService.AddAsync(newModel);
 
-            return RedirectToAction("Index");
+            return NoContent();
         }
 
-        public async Task<IActionResult> Edit(int id)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditConfirmed(ViewModel model)
         {
-            var model = await _modelService.GetByIdAsync(id);
+            var editModel = _mapper.Map<IModel>(model);
 
-            return View(model);
-        }
-
-        public async Task<IActionResult> Edit(IModel editModel)
-        {
             await _modelService.UpdateAsync(editModel);
 
-            return RedirectToAction("Index");
+            return NoContent();
         }
 
-        public async Task<IActionResult> Delete(int id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteConfirmed([FromHeader]ViewModel model)
         {
-            var model = await _modelService.GetByIdAsync(id);
+            var deleteModel = _mapper.Map<IModel>(model);
 
-            return View(model);
-        }
-
-        public async Task<IActionResult> DeleteConfirmed(IModel deleteModel)
-        {
             await _modelService.RemoveAsync(deleteModel);
-            return RedirectToAction("Index");
+            
+            return NoContent();
         }
     }
 }

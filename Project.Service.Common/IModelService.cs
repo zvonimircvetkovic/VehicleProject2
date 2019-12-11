@@ -9,7 +9,7 @@ namespace Project.Service.Common
         Task AddAsync(IModel vehicleModel);
         Task UpdateAsync(IModel vehicleModel);
         Task RemoveAsync(IModel vehicleModel);
-        Task<IList<IModel>> GetAllByMakeIdAsync(int id);
+        Task<IEnumerable<IModel>> GetAllByMakeIdAsync(int id);
         Task<IModel> GetByIdAsync(int id);
     }
 }

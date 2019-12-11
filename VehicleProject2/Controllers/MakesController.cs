@@ -2,65 +2,71 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Project.Common.Models;
 using Project.Model.Common;
 using Project.Service.Common;
 
 namespace Project.WebAPI.Controllers
 {
-    public class MakesController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class MakesController : ControllerBase
     {
         private readonly IMakeService _makeService;
+        private readonly IMapper _mapper;
 
-        public MakesController(IMakeService makeService)
+        public MakesController(IMakeService makeService, IMapper mapper)
         {
             _makeService = makeService;
+            _mapper = mapper;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var makes = await _makeService.GetAllAsync();
 
-            return View(makes);
+            return Ok(makes);
         }
 
-        public IActionResult Create()
+        [HttpPost]
+        public async Task<IActionResult> CreateConfirmed(ViewMake make)
         {
-            return View();
-        }
+            var newMake = _mapper.Map<IMake>(make);
 
-        public async Task<IActionResult> Create(IMake newMake)
-        {
             await _makeService.AddAsync(newMake);
 
-            return RedirectToAction("Index");
+            return NoContent();
         }
 
-        public async Task<IActionResult> Edit(int id)
+        [HttpGet("{id}", Name = "GetMake")]
+        public async Task<IActionResult> GetMake(int id)
         {
             var make = await _makeService.GetByIdAsync(id);
 
-            return View(make);
+            return Ok(make);
         }
 
-        public async Task<IActionResult> Edit(IMake editMake)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditConfirmed(ViewMake make)
         {
+            var editMake = _mapper.Map<IMake>(make);
+
             await _makeService.UpdateAsync(editMake);
 
-            return RedirectToAction("Index");
+            return NoContent();
         }
 
-        public async Task<IActionResult> Delete(int id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteConfirmed([FromHeader]ViewMake make)
         {
-            var make = await _makeService.GetByIdAsync(id);
+            var deleteMake = _mapper.Map<IMake>(make);
 
-            return View(make);
-        }
-
-        public async Task<IActionResult> DeleteConfirmed(IMake deleteMake)
-        {
             await _makeService.RemoveAsync(deleteMake);
-            return RedirectToAction("Index");
+
+            return NoContent();
         }
     }
 }

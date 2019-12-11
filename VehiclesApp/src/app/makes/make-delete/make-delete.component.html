@@ -1,0 +1,23 @@
+
+
+
+<form #editForm="ngForm" (ngSubmit)="deleteMake()">
+  <input type="hidden" name="id" class="form-control" [(ngModel)]="make && make.id">
+<div class="form-group">
+  <label for="name">Name</label>
+  <div class="col-md-2">
+    <p>{{make && make.name}}</p>
+  </div>
+</div>
+<div class="form-group">
+  <label for="abrv">Abbreviation</label>
+  <div class="col-md-2">
+    <p>{{make && make.abrv}}</p>
+  </div>
+</div>
+<div class="form-group">
+  <div class="col-md-offset-2 col-md-10">
+      <input type="submit" value="Delete" class="btn btn-danger" />
+  </div>
+</div>
+</form>

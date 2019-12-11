@@ -1,0 +1,22 @@
+
+
+
+<form #editForm="ngForm" (ngSubmit)="createModel()">
+  <div class="form-group">
+    <label for="name">Name</label>
+    <div class="col-md-2">
+      <input type="text" name="name" class="form-control" [(ngModel)]="model.name">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="abrv">Abbreviation</label>
+    <div class="col-md-2">
+      <input type="text" name="abrv" class="form-control" [(ngModel)]="model.abrv">
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-md-offset-2 col-md-10">
+        <input type="submit" value="Create" class="btn btn-success" />
+    </div>
+  </div>
+  </form>

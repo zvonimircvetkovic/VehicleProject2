@@ -1,0 +1,36 @@
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Make } from 'src/app/_models/make';
+import { MakeService } from 'src/app/_services/make.service';
+
+@Component({
+  selector: 'app-make-edit',
+  templateUrl: './make-edit.component.html',
+  styleUrls: ['./make-edit.component.css']
+})
+export class MakeEditComponent implements OnInit {
+  make: Make;
+  id: number;
+
+  constructor(private makeService: MakeService, private route: ActivatedRoute, private router: Router) { }
+
+  ngOnInit() {
+    this.route.params.subscribe(params => {
+      // tslint:disable-next-line: no-string-literal
+      this.id = +params['id'];
+      this.loadMake(this.id);
+    });
+  }
+
+  loadMake(id) {
+    this.makeService.getMake(id).subscribe((make: Make) => {
+      this.make = make;
+    });
+  }
+
+  updateMake() {
+    this.makeService.updateMake(this.make.id, this.make).subscribe();
+    this.router.navigate(['makes']);
+  }
+
+}
