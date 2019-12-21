@@ -10,21 +10,13 @@ import { MakeService } from 'src/app/_services/make.service';
 })
 export class MakeDeleteComponent implements OnInit {
   make: Make;
-  id: number;
 
   constructor(private makeService: MakeService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
+    this.route.data.subscribe(data => {
       // tslint:disable-next-line: no-string-literal
-      this.id = +params['id'];
-      this.loadMake(this.id);
-    });
-  }
-
-  loadMake(id) {
-    this.makeService.getMake(id).subscribe((make: Make) => {
-      this.make = make;
+      this.make = data['make'];
     });
   }
 

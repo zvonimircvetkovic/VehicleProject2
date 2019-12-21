@@ -9,7 +9,7 @@ using Project.DAL;
 namespace Project.DAL.Migrations
 {
     [DbContext(typeof(VehicleContext))]
-    [Migration("20191202221125_Initial")]
+    [Migration("20191211180654_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -6,7 +6,7 @@ namespace Project.DAL.Entities
     {
         string Abrv { get; set; }
         int Id { get; set; }
-        List<ModelEntity> ModelEntities { get; set; }
+        IEnumerable<ModelEntity> ModelEntities { get; set; }
         string Name { get; set; }
     }
 }

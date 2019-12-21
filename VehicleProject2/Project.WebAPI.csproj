@@ -6,6 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.9.4" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="5.0.1" />
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
@@ -21,7 +23,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Project.Common\Project.Common.csproj" />
     <ProjectReference Include="..\Project.DAL\Project.DAL.csproj" />
-    <ProjectReference Include="..\Project.Model\Project.Model.csproj" />
     <ProjectReference Include="..\Project.Repository\Project.Repository.csproj" />
     <ProjectReference Include="..\Project.Service\Project.Service.csproj" />
   </ItemGroup>

@@ -18,7 +18,6 @@ export class ModelCreateComponent implements OnInit {
     this.route.params.subscribe(params => {
       // tslint:disable-next-line: no-string-literal
       this.makeId = +params['id'];
-      // tslint:disable-next-line: no-string-literal
     });
     this.model = {
       makeId: this.makeId,

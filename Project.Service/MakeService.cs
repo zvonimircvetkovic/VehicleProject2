@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using Project.Common.Filter;
 using Project.DAL.Entities;
 using Project.Model.Common;
 using Project.Repository.Common;
 using Project.Service.Common;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Project.Service
@@ -44,11 +47,43 @@ namespace Project.Service
         }
 
         //Gets all makes from the repository
-        public async Task<IEnumerable<IMake>> GetAllAsync()
+        public async Task<PagedList<IMake>> GetAllAsync(PageModel page, SearchModel search, SortModel sort)
         {
-            var makes = await _unitOfWork.Makes.GetAllAsync();
-            var listMakes = _mapper.Map<IEnumerable<IMake>>(makes);
-            return listMakes;
+            if (!String.IsNullOrEmpty(search.SearchString))
+            {
+                var searchMakes = _unitOfWork.Makes.GetAllAsync().Where(m => m.Name.Contains(search.SearchString)
+                                                                        || m.Abrv.Contains(search.SearchString)).OrderByDescending(m => m.Name);
+
+                return await Paginate(page, searchMakes);
+            }
+
+            switch (sort.SortOrder)
+            {
+                case "name_desc":
+                {
+                    var makes = _unitOfWork.Makes.GetAllAsync().OrderByDescending(m => m.Name);
+
+                    return await Paginate(page, makes);
+                }
+                case "Abrv":
+                {
+                    var makes = _unitOfWork.Makes.GetAllAsync().OrderBy(m => m.Abrv);
+
+                    return await Paginate(page, makes);
+                }
+                case "abrv_desc":
+                {
+                    var makes = _unitOfWork.Makes.GetAllAsync().OrderByDescending(m => m.Abrv);
+
+                    return await Paginate(page, makes);
+                }
+                default:
+                {
+                    var makes = _unitOfWork.Makes.GetAllAsync().OrderBy(m => m.Name);
+
+                    return await Paginate(page, makes);
+                }
+            }
         }
 
         //Gets the make from the repository by its id
@@ -59,14 +94,16 @@ namespace Project.Service
             return listMake;
         }
 
-        //public async Task<IList<IMake>> ToPagedList(IPageModel pageModel)
-        //{
-        //    IList<IMake> makes = await _makeRepository.GetAllAsync();
+        //Method for pagination of a result
+        public async Task<PagedList<IMake>> Paginate(PageModel page, IQueryable<IMakeEntity> makes)
+        {
+            var makesPage = await PagedList<IMakeEntity>.ToPagedList(makes, page.PageNumber, page.PageSize);
 
-        //    pageModel.TotalCount = makes.Count;
-        //    pageModel.TotalPages = (int)Math.Ceiling(pageModel.TotalCount / (double)pageModel.PageSize);
+            var list = _mapper.Map<List<IMake>>(makesPage.Items);
 
-        //    return makes.Skip((pageModel.CurrentPage - 1) * pageModel.PageSize).Take(pageModel.PageSize).ToList();
-        //}
+            var listMakes = new PagedList<IMake>(list, makesPage.TotalCount, makesPage.CurrentPage, makesPage.PageSize);
+
+            return listMakes;
+        }
     }
 }

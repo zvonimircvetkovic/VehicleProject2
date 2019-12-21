@@ -1,7 +1,5 @@
-﻿using Project.Model.Common;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Project.Common.Filter;
+using Project.Model.Common;
 using System.Threading.Tasks;
 
 namespace Project.Service.Common
@@ -11,8 +9,7 @@ namespace Project.Service.Common
         Task AddAsync(IMake vehicleMake);
         Task UpdateAsync(IMake vehicleMake);
         Task RemoveAsync(IMake vehicleMake);
-        Task<IEnumerable<IMake>> GetAllAsync();
+        Task<PagedList<IMake>> GetAllAsync(PageModel page, SearchModel search, SortModel sort);
         Task<IMake> GetByIdAsync(int id);
-        //Task<IList<IMake>> ToPagedList(IPageModel pageModel);
     }
 }

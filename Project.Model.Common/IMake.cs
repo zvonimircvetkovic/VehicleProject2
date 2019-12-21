@@ -6,7 +6,7 @@ namespace Project.Model.Common
     {
         string Abrv { get; set; }
         int Id { get; set; }
-        List<IModel> Models { get; set; }
+        IEnumerable<IModel> Models { get; set; }
         string Name { get; set; }
     }
 }

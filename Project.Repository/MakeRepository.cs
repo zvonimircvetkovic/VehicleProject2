@@ -16,9 +16,10 @@ namespace Project.Repository
         }
 
         //This method gets and lists all vehicle makes from the database
-        public async Task<IEnumerable<IMakeEntity>> GetAllAsync()
+        public IQueryable<IMakeEntity> GetAllAsync()
         {
-            return await _context.Makes.Include(m => m.ModelEntities).ToListAsync();
+            //return await _context.Makes.Include(m => m.ModelEntities).ToListAsync();
+            return _context.Makes;
         }
 
         //This method gets a particlar make and is found by its Id

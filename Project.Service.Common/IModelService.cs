@@ -1,5 +1,5 @@
-﻿using Project.Model.Common;
-using System.Collections.Generic;
+﻿using Project.Common.Filter;
+using Project.Model.Common;
 using System.Threading.Tasks;
 
 namespace Project.Service.Common
@@ -9,7 +9,7 @@ namespace Project.Service.Common
         Task AddAsync(IModel vehicleModel);
         Task UpdateAsync(IModel vehicleModel);
         Task RemoveAsync(IModel vehicleModel);
-        Task<IEnumerable<IModel>> GetAllByMakeIdAsync(int id);
+        Task<PagedList<IModel>> GetAllByMakeIdAsync(int id, PageModel page, SearchModel search, SortModel sort);
         Task<IModel> GetByIdAsync(int id);
     }
 }

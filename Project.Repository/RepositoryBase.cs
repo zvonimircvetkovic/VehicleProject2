@@ -28,9 +28,10 @@ namespace Project.Repository
             _context.Set<T>().Remove(entity);
         }
 
-        public async Task<IEnumerable<T>> FindAll()
+        public IQueryable<T> FindAll()
         {
-            return await _context.Set<T>().AsNoTracking().ToListAsync();
+            //return await _context.Set<T>().AsNoTracking().ToListAsync();
+            return _context.Set<T>().AsNoTracking();
         }
 
         public async Task<IEnumerable<T>> FindById(Expression<Func<T, bool>> expression)

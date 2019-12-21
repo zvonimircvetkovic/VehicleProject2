@@ -8,16 +8,20 @@ import { MakeDeleteComponent } from './makes/make-delete/make-delete.component';
 import { ModelCreateComponent } from './models/model-create/model-create.component';
 import { ModelEditComponent } from './models/model-edit/model-edit.component';
 import { ModelDeleteComponent } from './models/model-delete/model-delete.component';
+import { MakesListResolver } from './_resolvers/makes-list.resolver';
+import { MakeResolver } from './_resolvers/make.resolver';
+import { ModelsListResolver } from './_resolvers/models-list.resolver';
+import { ModelResolver } from './_resolvers/model.resolver';
 
 export const appRoutes: Routes = [
   { path: 'home', component: HomeComponent },
-  { path: 'makes', component: MakesComponent },
+  { path: 'makes', component: MakesComponent, resolve: {makes: MakesListResolver} },
   { path: 'makes/create', component: MakeCreateComponent },
-  { path: 'makes/:id/edit', component: MakeEditComponent },
-  { path: 'makes/:id/delete', component: MakeDeleteComponent },
-  { path: 'makes/:id/models', component: ModelsComponent },
+  { path: 'makes/:id/edit', component: MakeEditComponent, resolve: {make: MakeResolver} },
+  { path: 'makes/:id/delete', component: MakeDeleteComponent, resolve: {make: MakeResolver} },
+  { path: 'makes/:id/models', component: ModelsComponent, resolve: {models: ModelsListResolver} },
   { path: 'makes/:id/models/create', component: ModelCreateComponent },
-  { path: 'makes/:id/models/:modelId/edit', component: ModelEditComponent },
-  { path: 'makes/:id/models/:modelId/delete', component: ModelDeleteComponent },
+  { path: 'makes/:id/models/:modelId/edit', component: ModelEditComponent, resolve: {model: ModelResolver} },
+  { path: 'makes/:id/models/:modelId/delete', component: ModelDeleteComponent, resolve: {model: ModelResolver} },
   { path: '**', redirectTo: 'home', pathMatch: 'full' },
 ];

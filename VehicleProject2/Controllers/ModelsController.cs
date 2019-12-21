@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Project.Common.Models;
+using Project.Common.Filter;
 using Project.Model.Common;
 using Project.Service.Common;
+using Project.WebAPI.Helpers;
+using Project.WebAPI.Models;
 
 namespace Project.WebAPI.Controllers
 {
@@ -24,11 +24,15 @@ namespace Project.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int makeId)
+        public async Task<IActionResult> Index(int makeId, [FromQuery]PageModel pageModel, [FromQuery]SearchModel search, [FromQuery]SortModel sort)
         {
-            var models = await _modelService.GetAllByMakeIdAsync(makeId);
+            var models = await _modelService.GetAllByMakeIdAsync(makeId, pageModel, search, sort);
 
-            return Ok(models);
+            Response.AddPagination(models.CurrentPage, models.PageSize, models.TotalCount, models.TotalPages);
+
+            var modelsList = _mapper.Map<IEnumerable<IModel>>(models.Items);
+
+            return Ok(modelsList);
         }
         
         [HttpGet("{id}", Name = "GetModel")]

@@ -10,30 +10,19 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class ModelEditComponent implements OnInit {
   model: Model;
-  makeId: number;
-  id: number;
 
   constructor(private modelService: ModelService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
+    this.route.data.subscribe(data => {
       // tslint:disable-next-line: no-string-literal
-      this.makeId = +params['id'];
-      // tslint:disable-next-line: no-string-literal
-      this.id = +params['modelId'];
-      this.loadModel(this.makeId, this.id);
-    });
-  }
-
-  loadModel(makeId, id) {
-    this.modelService.getModel(makeId, id).subscribe((model: Model) => {
-      this.model = model;
+      this.model = data['model'];
     });
   }
 
   updateModel() {
-    this.modelService.updateModel(this.makeId, this.id, this.model).subscribe();
-    this.router.navigate(['/makes', this.makeId, 'models']);
+    this.modelService.updateModel(this.model.makeId, this.model.id, this.model).subscribe();
+    this.router.navigate(['/makes', this.model.makeId, 'models']);
   }
 
 }

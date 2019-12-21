@@ -2,7 +2,6 @@
 using Project.DAL;
 using Project.DAL.Entities;
 using Project.Repository.Common;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,9 +15,10 @@ namespace Project.Repository
         }
 
         //This method gets and lists all vehicle models of a make with the same id from the database
-        public async Task<IEnumerable<IModelEntity>> GetAllByMakeIdAsync(int id)
+        public IQueryable<IModelEntity> GetAllByMakeIdAsync(int id)
         {
-            return await _context.Models.Where(m => m.MakeId == id).ToListAsync();
+            //return await _context.Models.Where(m => m.MakeId == id).ToListAsync();
+            return _context.Models.Where(m => m.MakeId == id);
         }
 
         //This method gets a particlar make model and is found by its Id

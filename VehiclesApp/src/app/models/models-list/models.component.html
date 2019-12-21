@@ -1,10 +1,19 @@
 <h2>Model List</h2>
 
+<br>
+
+<form searchForm="NgForm" class="form-inline my-2 my-lg-0" (ngSubmit)="search()">
+  <input class="form-control mr-sm-2" type="text" name="searchString" placeholder="Search" [(ngModel)]="searchString">
+  <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+</form>
+
+<br>
+
 <table class="table table-condensed">
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Abrv</th>
+      <th><button type="button" class="btn btn-link" (click)="sortOrder === '' ? sortBy('name_desc') : sortBy('')">Name</button></th>
+      <th><button type="button" class="btn btn-link" (click)="sortOrder === 'Abrv' ? sortBy('abrv_desc') : sortBy('Abrv')">Abbreviation</button></th>
     </tr>
   </thead>
   <tbody *ngFor="let model of models">
@@ -21,3 +30,13 @@
     </tr>
   </tfoot>
 </table>
+
+<div class="d-flex justify-content-center">
+  <pagination [boundaryLinks]="true"
+              [totalItems]="pagination.totalItems"
+              [itemsPerPage] = "pagination.itemsPerPage"
+              [(ngModel)]="pagination.currentPage"
+              (pageChanged)="pageChanged($event)"
+            previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+  </pagination>
+</div>

@@ -1,23 +1,24 @@
-﻿using AutoMapper;
+﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Project.Common.AutoMapper;
 using Project.DAL;
 using Project.Repository;
-using Project.Repository.Common;
 using Project.Service;
-using Project.Service.Common;
-using System.IO;
+using Project.WebAPI.Models;
+using System;
 
 namespace Project.WebAPI
 {
     public class Startup
     {
+        public IContainer AutofacContainer { get; private set; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -26,26 +27,30 @@ namespace Project.WebAPI
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             var config = new MapperConfiguration(cfg =>
             {
-                cfg.AddProfile(new AutoMapperProfile());
+                cfg.AddProfile(new ServiceMapperProfile());
+                cfg.AddProfile(new APIMapperProfile());
             });
             IMapper mapper = config.CreateMapper();
             services.AddSingleton(mapper);
+            
+            services.AddDbContext<VehicleContext>(options => options.UseSqlServer(Configuration.GetConnectionString("VehicleConnection")));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSingleton(Configuration);
 
-            services.AddScoped<IVehicleContext, VehicleContext>();
-            services.AddScoped<IMakeRepository, MakeRepository>();
-            services.AddScoped<IModelRepository, ModelRepository>();
-            services.AddScoped<IMakeService, MakeService>();
-            services.AddScoped<IModelService, ModelService>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddDbContext<VehicleContext>(options => options.UseSqlServer(Configuration.GetConnectionString("VehicleConnection")));
+            var builder = new ContainerBuilder();
+            builder.Populate(services);
+            builder.RegisterModule(new RepositoryDIModule());
+            builder.RegisterModule(new ServiceDIModule());
+            AutofacContainer = builder.Build();
+
             services.AddCors();
+
+            return new AutofacServiceProvider(AutofacContainer);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

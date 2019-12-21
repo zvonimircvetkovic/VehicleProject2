@@ -5,7 +5,7 @@ namespace Project.DAL
 {
     public class VehicleContext : DbContext, IVehicleContext
     {
-        public VehicleContext(DbContextOptions options) : base(options)
+        public VehicleContext(DbContextOptions<VehicleContext> options) : base(options)
         {
         }
         public DbSet<MakeEntity> Makes { get; set; }

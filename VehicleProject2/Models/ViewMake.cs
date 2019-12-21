@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Project.Common.Models
+﻿namespace Project.WebAPI.Models
 {
     public class ViewMake
     {

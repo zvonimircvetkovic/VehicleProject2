@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
-using Project.Common.Models;
+using Project.Common.Filter;
 using Project.DAL.Entities;
 using Project.Model;
 using Project.Model.Common;
 
-namespace Project.Common.AutoMapper
+namespace Project.Service
 {
-    public class AutoMapperProfile : Profile
+    public class ServiceMapperProfile : Profile
     {
-        public AutoMapperProfile()
+        public ServiceMapperProfile()
         {
             CreateMap<MakeEntity, Make>().ReverseMap();
             CreateMap<MakeEntity, IMake>().ReverseMap();
@@ -22,8 +22,7 @@ namespace Project.Common.AutoMapper
             CreateMap<IModel, Model.Model>().ForMember(d => d.Id, o => o.Condition(s => s.Id != 0));
             CreateMap<IModel, IModelEntity>();
             CreateMap<IModelEntity, IModel>().ForMember(d => d.Id, o => o.Condition(s => s.Id != 0));
-            CreateMap<ViewMake, IMake>();
-            CreateMap<ViewModel, IModel>();
+            CreateMap<PagedList<IMakeEntity>, PagedList<IMake>>();
         }
     }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { ModelService } from 'src/app/_services/model.service';
 import { Model } from 'src/app/_models/Model';
+import { Pagination, PaginatedResult } from 'src/app/_models/pagination';
 
 @Component({
   selector: 'app-models',
@@ -11,6 +12,9 @@ import { Model } from 'src/app/_models/Model';
 export class ModelsComponent implements OnInit {
   models: Model[];
   makeId: number;
+  pagination: Pagination;
+  sortOrder: any = {};
+  searchString: string;
 
   constructor(private modelService: ModelService, private route: ActivatedRoute) {
     route.params.subscribe(val => {
@@ -22,14 +26,36 @@ export class ModelsComponent implements OnInit {
     this.route.params.subscribe(params => {
       // tslint:disable-next-line: no-string-literal
       this.makeId = +params['id'];
-      this.loadModels(this.makeId);
+    });
+    this.route.data.subscribe(data => {
+      // tslint:disable-next-line: no-string-literal
+      this.models = data['models'].result;
+      // tslint:disable-next-line: no-string-literal
+      this.pagination = data['models'].pagination;
     });
   }
 
-  loadModels(makeId) {
-    this.modelService.getModels(makeId).subscribe((models: Model[]) => {
-      this.models = models;
-    });
+  loadModels() {
+    this.modelService.getModels(this.makeId, this.pagination.currentPage, this.pagination.itemsPerPage,
+      this.sortOrder, this.searchString).subscribe(
+      (models: PaginatedResult<Model[]>) => {
+        this.models = models.result;
+        this.pagination = models.pagination;
+      });
+  }
+
+  pageChanged(event: any): void {
+    this.pagination.currentPage = event.page;
+    this.loadModels();
+  }
+
+  sortBy(columnName: any) {
+    this.sortOrder = columnName;
+    this.loadModels();
+  }
+
+  search() {
+    this.loadModels();
   }
 
 }
